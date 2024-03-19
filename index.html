@@ -710,48 +710,8 @@ function hideLoading(loader) {
   loader.classList.remove("display");
 }
 
-// Function to notify temperature changes
-function notifyTemp(currentTemp, userInput,daily_result) {
-  const storedTemps = getStoredTemperatures();
 
-  if (userInput in storedTemps) {
-    const oldTemp = storedTemps[userInput];
 
-    if (oldTemp < currentTemp) {
-      showNotification(`Temperature rise from ${oldTemp} to ${currentTemp}`);
-    } else if (oldTemp > currentTemp) {
-      showNotification(`Temperature drop from ${oldTemp} to ${currentTemp}`);
-    } else {
-      showNotification("Temperature is constant till now.");
-    }
-
-    setTemperature(userInput, currentTemp);
-  } else {
-    setTemperature(userInput, currentTemp);
-    showNotification("New location and temperature noted.");
-  }
-}
-
-// Function to get stored temperatures from localStorage
-function getStoredTemperatures() {
-  const storedTemps = localStorage.getItem("temperatures");
-  if (storedTemps) {
-    return JSON.parse(storedTemps);
-  }
-  return {};
-}
-
-// Function to set stored temperatures in localStorage
-function setStoredTemperatures(temperatures) {
-  localStorage.setItem("temperatures", JSON.stringify(temperatures));
-}
-
-// Function to set temperature for a location
-function setTemperature(location, temp) {
-  const storedTemps = getStoredTemperatures();
-  storedTemps[location] = temp;
-  setStoredTemperatures(storedTemps);
-}
 
 // Function to display weather information
 function displayWeatherInfo(hourly_result, daily_result) {
@@ -779,11 +739,7 @@ function displayWeatherInfo(hourly_result, daily_result) {
   document.getElementById("time").innerHTML = `${loc_time}`;
   document.getElementById("cur_temp").innerHTML = `${Math.round(temp)}&deg;C`;
 
-  notifyTemp(temp,
-      daily_result.city.name,
-      daily_result
-    );
-
+ 
   // sunrise time
   const rise_date = new Date((sunrise + time_offset) * 1000);
   const rise_hour = rise_date.getUTCHours();
@@ -1040,13 +996,6 @@ function displayHourlyForecast(hourly_info) {
   });
 }
 
-// Function to show notification
-function showNotification(message) {
-  new Notification("Hey!", {
-    body: message,
-    icon: "./assist/favicon.png",
-  });
-}
 
 </script>
   </body>
